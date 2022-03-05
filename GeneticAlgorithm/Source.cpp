@@ -55,9 +55,13 @@ Chromosome mutationFunc(const Chromosome& xBase, const std::function<double(void
 
 	Chromosome newChromosome = xBase;
 
-	int randIndex = rand() % newChromosome.data.size();
+	if (!xBase.data.empty())
+	{
+		//int randIndex = rand() % newChromosome.data.size();				// This results in the GA not working
+		int randIndex = (int)(rnd01() * newChromosome.data.size());		// This results in the GA working correctly
 
-	newChromosome.data[randIndex] = generate_random_character(rnd01);
+		newChromosome.data[randIndex] = generate_random_character(rnd01);
+	}
 
 	return newChromosome;
 }
@@ -131,7 +135,7 @@ int main()
 
 	GeneticAlgo ga_obj;
 	ga_obj.problem_mode = EA::GA_MODE::SOGA;	// State the Genetic Algorithm is aiming for a single objective.
-	ga_obj.population = 200;
+	ga_obj.population = 50;
 	ga_obj.generation_max = 1000;				// We want this to keep attempting for a long time.
 	ga_obj.init_genes = shakespeare_init_genes;
 	ga_obj.calculate_SO_total_fitness = calculate_total_fitness;
@@ -139,7 +143,7 @@ int main()
 	ga_obj.mutate = mutationFunc;
 	ga_obj.crossover = crossoverFunc;
 	ga_obj.crossover_fraction = 1;
-	ga_obj.mutation_rate = 0.3;
+	ga_obj.mutation_rate = 0.4;
 	ga_obj.best_stall_max = 1000;
 	ga_obj.average_stall_max = 1000;
 	ga_obj.SO_report_generation = reportGeneration;
